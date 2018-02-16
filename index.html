@@ -5,20 +5,34 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <meta name="theme-color" content="#000000">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="manifest" href="manifest.json">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link href='https://fonts.googleapis.com/css?family=Share+Tech' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="./static/css/main.css" rel="stylesheet" media="all">
+    <link href="./static/css/tooltip-d3-js-map.css" rel="stylesheet">
     <title>CryptoHongKong - Hong Kong Domination on the Ethereum Blockchain</title>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114289118-1"></script>
     <script>
     function gtag() { dataLayer.push(arguments) } window.dataLayer = window.dataLayer || [], gtag("js", new Date), gtag("config", "UA-114289118-1")
     </script>
-    
 </head>
 
 <body>
+    <div id="tooltip" class="hidden">
+        <div><strong>Region:</strong> <span id="region-name-tooltip">100</span></div>
+        <div><strong>Type:</strong> <span id="region-type-tooltip">200</span></div>
+    </div>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root">Please do not waste this domain. If you are interested in it, contact cryptohongkong101@gmail.com</div>
- 
+    <div id="root">Please do not waste this domain. If you are interested in it, contact cryptohongkong101@gmail.com
+        <div class="content">
+            <div id="viz"></div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+        <script src="https://d3js.org/topojson.v1.min.js"></script>
+        <!-- D3.js code creates map of Hong Kong. -->
+        <script src="./static/js/map-d3-hong-kong-adm1.js"></script>
 </body>
 
 </html>
