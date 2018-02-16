@@ -10,9 +10,10 @@
     <link href='https://fonts.googleapis.com/css?family=Share+Tech' rel='stylesheet' type='text/css'>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="./static/css/main.32498749.css" rel="stylesheet">
     <link href="./static/css/main.css" rel="stylesheet" media="all">
     <link href="./static/css/tooltip-d3-js-map.css" rel="stylesheet">
-    <title>CryptoHongKong - Hong Kong Domination on the Ethereum Blockchain</title>
+    <title>CryptoHongKong - Hong Kong 18 District Domination on the Ethereum Blockchain</title>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114289118-1"></script>
     <script>
     function gtag() { dataLayer.push(arguments) } window.dataLayer = window.dataLayer || [], gtag("js", new Date), gtag("config", "UA-114289118-1")
@@ -25,14 +26,68 @@
         <div><strong>Type:</strong> <span id="region-type-tooltip">200</span></div>
     </div>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root">Please do not waste this domain. If you are interested in it, contact cryptohongkong101@gmail.com
+    <div id="root">
+        <h2 class="ui header">Please do not waste this domain. If you are interested in it, contact cryptohongkong101@gmail.com</h2>
         <div class="content">
-            <div id="viz"></div>
-        </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-        <script src="https://d3js.org/topojson.v1.min.js"></script>
-        <!-- D3.js code creates map of Hong Kong. -->
-        <script src="./static/js/map-d3-hong-kong-adm1.js"></script>
+            <div class="ui container app">
+                <div class="ui huge topbar menu">
+                    <a class="item active" aria-current="true" href="/" style="padding-left: 0px;">
+                        <div class="ui">CRYPTO HONGKONG.IO
+                        </div>
+                    </a>
+                    <div class="right menu">
+                        <a class="active item" href="/" style="text-transform: uppercase;">Marketplace</a>
+                        <div class="item">
+                            <div class="ui label" style="margin-left: 0px; background-color: rgb(240, 204, 8);">Account Name</div>
+                        </div>
+                        <div class="item"><img src="./static/media/eth_online.1b5b9c81.svg" class="ui image" style="width: 35px; height: 35px;"></div>
+                    </div>
+                </div>
+                <div class="marketplace">
+                    <div id="viz"></div>
+                    <span>
+						<div class="ui basic segment" style="padding: 0px;">
+    						<div class="ui stackable four cards">
+        						<div class="ui card dimmable country-card">
+            						<div class="ui dimmer">
+                						<div class="content">
+						                    <div class="center">
+						                        <div class="ui text loader">Transaction Pending</div>
+						                    </div>
+                						</div><!--end content-->
+            						</div><!--ui dimmer-->
+            						<div class="content country-card-bg"><img src="./static/media/district/Central_and_Western_District_logo.png" class="ui rounded left floated image" style="height: 40px;">
+                						<div class="left aligned header" style="margin-top: 10px;">Central and Western</div>
+                						<div class="ui image">
+                							<span class="SVGInline country-card-vector"><!--?xml version="1.0" standalone="no"?--></span>
+                						</div>
+            						</div>
+									<div class="content country-card-owner" style="background-color: rgb(157, 39, 207); color: rgb(0, 0, 0);"><span style="font-size: 0.9em; letter-spacing: 1.5px;">Owner: cryptohongkong</span></div>
+
+
+<!-- <div class="content"><div class="ui two column grid"><div class="column"><div role="list" class="ui list"><div role="listitem" class="item"><div class="header">Capital</div>Tokyo</div><div role="listitem" class="item"><div class="header">Population</div>126960000</div></div></div><div class="column"><div role="list" class="ui list"><div role="listitem" class="item"><div class="header">Language</div>Japanese</div><div role="listitem" class="item"><div class="header">Currency</div>Japanese yen</div></div></div></div></div> -->
+            					
+            						
+            						<div class="extra content">
+                						<div class="center aligned content">
+                    						<div class="ui large left labeled button" role="button" tabindex="0"><a class="ui basic label">0.2 ETH</a>
+                        					<button class="ui primary button" role="button">Buy</button>
+                    						</div>
+                						</div>
+            						</div>
+        						</div>
+    						</div>
+						</div>
+    				</span><!--end span-->
+    			</div><!--end marketplace-->
+    		</div>
+    	</div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="./static/js/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <!-- D3.js code creates map of Hong Kong. -->
+    <script src="./static/js/map-d3-hong-kong-adm1.js"></script>
 </body>
 
 </html>

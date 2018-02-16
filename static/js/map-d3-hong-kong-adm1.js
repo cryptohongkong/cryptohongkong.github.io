@@ -23,11 +23,11 @@ var margin = {
     height = width * mapRatio,
     mapRatioAdjuster = 40;
     hongKongCenter = [114.15, 22.33];
-var projection = d3.geo.mercator().center(hongKongCenter).translate([width / 2, height / 2]).scale(width * [mapRatio + mapRatioAdjuster]),
-    zoom = d3.behavior.zoom().translate([0, 0]).scale(1).scaleExtent([1, 20]).on("zoom", zoomed);
+var projection = d3.geo.mercator().center(hongKongCenter).translate([width / 2, height / 2]).scale(width * [mapRatio + mapRatioAdjuster]);
+var    zoom = d3.behavior.zoom().translate([0, 0]).scale(1).scaleExtent([1, 20]).on("zoom", zoomed);
 
 d3.select(window).on("resize", resize);
-var svg = d3.select("#viz").append("svg").attr("width", width).attr("height", height).call(zoom),
+var svg = d3.select("#viz").append("svg").attr("width", width).attr("height", height),
     path = d3.geo.path().projection(projection),
 
 features = svg.append("g");
