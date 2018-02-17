@@ -18,6 +18,7 @@
     <script>
     function gtag() { dataLayer.push(arguments) } window.dataLayer = window.dataLayer || [], gtag("js", new Date), gtag("config", "UA-114289118-1")
     </script>
+
 </head>
 
 <body>
@@ -28,6 +29,12 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
         <h2 class="ui header">Please do not waste this domain. If you are interested in it, contact cryptohongkong101@gmail.com</h2>
+        <p>Enter your Ethereum Address:</p>
+        <input type="text" size="50" id="address" />
+        <button type="button" onClick="setNickName();">Set Nick Name</button>
+        <br/>
+        <br/>
+        <div id="output"></div>
         <div class="content">
             <div class="ui container app">
                 <div class="ui huge topbar menu">
@@ -88,6 +95,9 @@
     <script src="https://d3js.org/topojson.v1.min.js"></script>
     <!-- D3.js code creates map of Hong Kong. -->
     <script src="./static/js/map-d3-hong-kong-adm1.js"></script>
+    <script type="text/javascript" src="./static/js/web3.min.js"></script>
+    <script type="text/javascript" src="./static/js/myABI.js"></script>
+    <script type="text/javascript" src="./static/js/main.js"></script>
 </body>
 
 </html>
