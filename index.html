@@ -8,9 +8,8 @@
     <link rel="manifest" href="manifest.json">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link href='https://fonts.googleapis.com/css?family=Share+Tech' rel='stylesheet' type='text/css'>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" media="all">
     <link href="./static/css/main.32498749.css" rel="stylesheet">
+    <!-- <link href="./static/css/semantic.min.css" rel="stylesheet"> -->
     <link href="./static/css/main.css" rel="stylesheet" media="all">
     <link href="./static/css/tooltip-d3-js-map.css" rel="stylesheet">
     <title>CryptoHongKong - Hong Kong 18 District Domination on the Ethereum Blockchain</title>
@@ -29,11 +28,8 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
         <h2 class="ui header">Please do not waste this domain. If you are interested in it, contact cryptohongkong101@gmail.com</h2>
-        <p>Enter your Ethereum Address:</p>
-        <input type="text" size="50" id="address" />
-        <button type="button" onClick="setNickName();">Set Nick Name</button>
-        <br/>
-        <br/>
+        
+        <h3 class="ui header">Step By Step, my first DAPP!</h3>
         <div id="output"></div>
         <div class="content">
             <div class="ui container app">
@@ -45,11 +41,17 @@
                     <div class="right menu">
                         <a class="active item" href="/" style="text-transform: uppercase;">Marketplace</a>
                         <div class="item">
-                            <div class="ui label" style="margin-left: 0px; background-color: rgb(240, 204, 8);">Account Name</div>
+                            <div class="ui label" style="margin-left: 0px; background-color: rgb(240, 204, 8);"></div>
                         </div>
-                        <div class="item"><img src="./static/media/eth_online.1b5b9c81.svg" class="ui image" style="width: 35px; height: 35px;"></div>
+                        <div class="ui custom popup bottom right transition hidden">
+                            <button class="ui button">
+                                Set NickName
+                            </button>
+                        </div>
+                        <div class="icon"> <img src="./static/media/eth_offline.079fadfb.svg" class="ui image" style="width: 35px; height: 35px;" data-tooltip="Add users to your feed" data-position="bottom left"></div>
                     </div>
                 </div>
+
                 <div class="marketplace">
                     <div id="viz"></div>
                     <span>
@@ -89,6 +91,33 @@
     			</div><!--end marketplace-->
     		</div>
     	</div>
+        <div class="ui small modal warning" style="margin-top: -95px;">
+            <div class="ui header"><i aria-hidden="true" class="warning sign icon"></i> Error</div>
+            <div class="content"></div>
+            <div class="actions">
+                <button class="ui cancel button" role="button">Close</button>
+            </div>
+        </div>
+        <div class="ui small modal nickname" style="margin-top: -104px;">
+          <div class="ui inverted dimmer">
+              <div class="content">
+                  <div class="center">
+                      <div class="ui text loader">Waiting on Transaction ...</div>
+                  </div>
+              </div>
+          </div>
+          <div class="ui header"><i aria-hidden="true" class="user icon"></i> Set Nickname</div>
+          <div class="content">
+              <div class="ui error fluid input">
+                  <input type="text" value="" placeholder="Nickname">
+              </div>
+          </div>
+          <div class="actions">
+              <button class="ui button cancel" role="button">Cancel</button>
+              <button class="ui primary disabled button" disabled="" role="button" tabindex="-1">Ok</button>
+          </div>
+        </div>
+
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="./static/js/semantic.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
