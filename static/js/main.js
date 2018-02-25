@@ -262,7 +262,7 @@ function startApp() {
     };
     refreshAccount();
     var accountInterval = setInterval(refreshAccount, 100);
-    adminOperaion();
+    //adminOperaion();
 }
 
 
