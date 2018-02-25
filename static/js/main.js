@@ -3,8 +3,8 @@ var isOnline = false;
 var currentAccount = "";
 var contractAddress = {
     "mainnet": {
-        "nicks": "0x80Acc3604EF04Db9a46e78F725bFe422F7E8eCE6",
-        "itemToken": ""
+        "nicks": "0x1C61D42EFAFe3c627998f2d53D897DBFD99d7fF9",
+        "itemToken": "0x61D89828f79BbaEcf854c7dF08dca887aF0f8eE7"
     },
     "testnet": {
         "nicks": "0x998645774B5aA534A83e39515AbF2C41A0dCdEe0",
@@ -12,7 +12,7 @@ var contractAddress = {
     },
     "ropsten": {
         "nicks": "0x4749b95A106CC255C1DD986FbAdC7286D03c99ab",
-        "itemToken": "0xa35bd8671C1858d09622d4AEF92E4f025962B8D6"
+        "itemToken": "0x7f2d6e933ab2013d32a68d27c5823dd36685702b"
     }
 };
 
@@ -26,41 +26,9 @@ $(window).on('load', function() {
         //TO-DO
         //Pop Up Model And Ask User download MetaMask       
         console.log('No web3? You should consider trying MetaMask!');
-
-
     }
     window.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined;
     checkNetwork(window.web3);
-
-});
-
-var nickNameModalInput, ethOnOffLineIcon, nickNameSetButton, nickNameModal, nickNameModalSetButton;
-
-
-$(document).ready(function() {
-    // $('.model.warning>.button').click(function() {
-    //     $('.modal.warning').modal('hide').modal('hide dimmer');
-    // });
-    nickNameModalInput = $(".modal.nickname>.content>.input>input");
-    ethOnOffLineIcon = $('.app >.menu>.right>.icon');
-    nickNameSetButton = $('.custom.popup>.ui.button');
-    nickNameModal = $('.modal.nickname');
-    nickNameModalSetButton = nickNameModal.find('.actions>.primary');
-    nickNameModalSetButton.on('click', function() {
-        if (nickNameModalInput.val().length != 0)
-            setNickName(nickNameModalInput.val());
-    });
-    nickNameModalInput.on('input', function() {
-        if (nickNameModalInput.val().length == 0)
-            nickNameModalSetButton.addClass('disabled').prop("disabled", true);
-        else
-            nickNameModalSetButton.removeClass('disabled').prop("disabled", false);
-    });
-    ethOnOffLineIcon.attr('data-tooltip', 'offline').attr('data-position', 'bottom right');
-    nickNameSetButton.click(function() {
-        nickNameModal.modal('show');
-
-    });
 
 });
 
@@ -90,6 +58,91 @@ var getTransactionReceiptMined = function getTransactionReceiptMined(txHash, int
     }
 };
 
+var nickNameModalInput, ethOnOffLineIcon, nickNameSetButton, nickNameModal, nickNameModalSetButton;
+
+
+$(document).ready(function() {
+    // $('.model.warning>.button').click(function() {
+    //     $('.modal.warning').modal('hide').modal('hide dimmer');
+    // });
+    nickNameModalInput = $(".modal.nickname>.content>.input>input");
+    ethOnOffLineIcon = $('.app >.menu>.right>.icon');
+    nickNameSetButton = $('.custom.popup>.ui.button');
+    nickNameModal = $('.modal.nickname');
+    nickNameModalSetButton = nickNameModal.find('.actions>.primary');
+    nickNameModalSetButton.on('click', function() {
+        if (nickNameModalInput.val().length != 0)
+            setNickName(nickNameModalInput.val());
+    });
+    nickNameModalInput.on('input', function() {
+        if (nickNameModalInput.val().length == 0)
+            nickNameModalSetButton.addClass('disabled').prop("disabled", true);
+        else
+            nickNameModalSetButton.removeClass('disabled').prop("disabled", false);
+    });
+    ethOnOffLineIcon.attr('data-tooltip', 'offline').attr('data-position', 'bottom right');
+    nickNameSetButton.click(function() {
+        nickNameModal.modal('show');
+    });
+});
+
+function getNickName(address) {
+    return new Promise(function(resolve, reject) {
+        var nickNameContract = web3.eth.contract(nickABI);
+        var nicks = nickNameContract.at(contractAddress[currentNet]["nicks"]);
+        nicks.nickOf(address, function(error, result) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
+function buy(data) {
+    var itemTokenContract = web3.eth.contract(itemTokenABI);
+    var ItemToken = itemTokenContract.at(contractAddress[currentNet]["itemToken"]);
+    var nextPriceFormat = data.data('nextPrice');
+    var nextPrice = web3.toWei(nextPriceFormat, 'ether');
+    var itemID = data.data('itemID');
+
+    //Buy Item
+    ItemToken.buy(itemID, {from: currentAccount, value: nextPrice }, function(error, txnHash) {
+        if (!error) {
+            if (txnHash) {
+                web3.eth.getTransactionReceiptMined(txnHash, 500).then(function(receipt) {
+                    alert("Transaction is done");
+                    location.reload();
+                });
+            } else
+                alert("Transaciont Fail!!");
+        } else
+            alert("Transaciont Fail!!");
+    })
+}
+
+function priceOf(itemID) {
+    return new Promise(function(resolve, reject) {
+        var itemTokenContract = web3.eth.contract(itemTokenABI);
+        var ItemToken = itemTokenContract.at(contractAddress[currentNet]["itemToken"]);
+        ItemToken.priceOf(itemID, function(error, result) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
+function formatPrice(price)
+{
+
+    doublePrice = parseFloat(web3.fromWei(price, 'ether').toString());
+
+    return doublePrice.toFixed(5);;
+}
 
 function checkNetwork(web3) {
     web3.version.getNetwork((err, netId) => {
@@ -143,51 +196,36 @@ function checkNetwork(web3) {
 }
 
 
-function getNickName() {
-    var nickNameContract = web3.eth.contract(nickABI);
-    var nicks = nickNameContract.at(contractAddress[currentNet]["nicks"]);
-    nicks.nickOf(currentAccount, function(error, result) {
-        if (!error) {
+function getNickNameUI() {
+    var ethIcon = $('.app >.menu>.right>.icon');
+    var ethIconImage = ethIcon.find('.image');
+    var nickNameItem = $('.app >.menu>.right>.item');
+    var nickNameLabel = $('.app >.menu>.right>.item>.label');
+    getNickName(currentAccount).then(function(result) {
             isOnline = true;
-            $('.app >.menu>.right>.icon').attr('data-tooltip', 'online').attr('data-position', 'bottom right');
-            $('.app >.menu>.right>.icon>.image').attr('src', '/static/media/eth_online.svg');
+            ethIcon.attr('data-tooltip', 'online').attr('data-position', 'bottom right');
+            ethIconImage.attr('src', '/static/media/eth_online.svg');
             //enable set nickname
-            $('.app >.menu>.right>.item>').popup({
+            nickNameItem.popup({
                 popup: $('.custom.popup'),
                 position: 'bottom left',
                 on: 'click'
             });
 
             if (result)
-                $('.app >.menu>.right>.item>.label').html(result);
+                nickNameLabel.html(result);
             else
-                $('.app >.menu>.right>.item>.label').html(currentAccount.substr(currentAccount.length - 6));
-
-        } else {
+                nickNameLabel.html(currentAccount.substr(currentAccount.length - 6));
+        })
+        .catch(function(error) {
             isOnline = false;
-            $('.app >.menu>.right>.icon').attr('data-tooltip', 'offline').attr('data-position', 'bottom right');
-            $('.app >.menu>.right>.icon>.image').attr('src', '/static/media/eth_offline.svg');
+            ethIcon.attr('data-tooltip', 'offline').attr('data-position', 'bottom right');
+            ethIconImage.attr('src', '/static/media/eth_offline.svg');
             //console.log(error);
-        }
-    });
+        });
+
 }
 
-// function getCurrentAccount(accounts) {
-//     if (accounts != null && accounts.length > 0) {
-//         web3.eth.defaultAccount = accounts[0];
-//         //If eth is offline set online
-//         if (!isOnline) {
-
-//             isOnline = !isOnline;
-//         }
-
-//     } else {
-//         console.log("Accounts is null or accounts array is empty");
-//         //TO-DO: Handle the case, tell user you do not have account, ask 
-//         //them to register or whatever...
-//         //if eth is online set offline
-//     }
-// }
 
 
 
@@ -203,7 +241,7 @@ function setNickName(nickname) {
             if (txnHash) {
                 web3.eth.getTransactionReceiptMined(txnHash, 500).then(function(receipt) {
                     nickNameModal.find('.dimmer').dimmer('show');
-                    getNickName();
+                    getNickNameUI();
                     nickNameModal.modal('hide');
                 });
             } else
@@ -215,16 +253,11 @@ function setNickName(nickname) {
 
 function startApp() {
     initUI();
-
-    // web3.eth.getAccounts((err, acc) => {
-    //     //getCurrentAccount(acc);
-    //     //getNickName();
-    // });
     var refreshAccount = function() {
         if (web3.eth.accounts[0] !== currentAccount) {
             web3.eth.defaultAccount = web3.eth.accounts[0];
             currentAccount = web3.eth.defaultAccount;
-            getNickName();
+            getNickNameUI();
         }
     };
     refreshAccount();
@@ -232,74 +265,150 @@ function startApp() {
     adminOperaion();
 }
 
-function initUI() {
-    var cardsNode = $(".cards");
 
-    for (var i = 0; i < hk18districts.length; i++) {
-        var districtName = hk18districts[i]['code'];
-        var imageURL = '/static/media/district/' + districtName.split(" ").join('_') + '_District_logo.svg';
-        var wikiURL = "https://en.wikipedia.org/wiki/" + districtName.split(" ").join('_') + '_District';
-        var ownerName = 'cryptohongkong';
 
-        var currentPrice = 24 + ' ETH';
-        var tranactionPending = $('<div class="ui dimmer"><div class="content"><div class="center"><div class="ui text loader">Transaction Pending</div></div></div><!--end content--></div>');
-        //var card = 
-        var cardNode = $('<div></div>').appendTo(cardsNode).addClass("ui card dimmable country-card");
-        cardNode.append(tranactionPending);
-        var cardContent = $('<div></div>').addClass('content country-card-bg');
-        var districtImage = $('<img></img>').addClass('ui rounded left floated image')
-            .attr('src',  imageURL).css("height", "40px");
-        var cardHeader = $('<div></div>').addClass('left aligned header').css("margin-top", "10px")
-            .html('<a href="'+wikiURL+'" target="_blank">'+districtName+'</a>');
-        var cardOwner = $('<div></div>').addClass('content country-card-owner')
-            .css("background-color", "rgb(157, 39, 207)")
-            .css("color", "rgb(0, 0, 0)");
-        var owner = $('<span></span>').html("Owner: " + ownerName).css('font-size', '0.9em').css("letter-spacing", "1.5");
-        cardOwner.append(owner);
-        var extraContent = $('<div></div>').addClass('center aligned content')
-            .appendTo($('<div></div>').addClass('extra content'))
-            .append($('<div class="ui large left labeled button" role="button" tabindex="0"><a class="ui basic label">' +
-                currentPrice + '</a><button class="ui primary button" role="button">Buy</button></div>'));
-        cardContent.append(districtImage);
-        cardContent.append(cardHeader);
-        cardNode.append(cardContent);
-
-        cardNode.append(cardOwner);
-        cardNode.append(extraContent);
+function initMap() {
+    function resize() {
+        width = parseInt(d3.select("#viz").style("width")),
+            width = width - margin.left - margin.right,
+            height = width * mapRatio,
+            projection.translate([width / 2, height / 2]).center(hongKongCenter).scale(width * [mapRatio + mapRatioAdjuster]),
+            svg.style("width", width + "px").style("height", height + "px"),
+            svg.selectAll("path").attr("d", path)
     }
+
+    function zoomed() {
+        features.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
+    }
+
+    var margin = {
+            top: 10,
+            left: 10,
+            bottom: 10,
+            right: 10
+        },
+        width = parseInt(d3.select("#viz").style("width")),
+        width = width - margin.left - margin.right,
+        mapRatio = .5,
+        height = width * mapRatio,
+        mapRatioAdjuster = 40;
+    hongKongCenter = [114.15, 22.33];
+    var projection = d3.geo.mercator().center(hongKongCenter).translate([width / 2, height / 2]).scale(width * [mapRatio + mapRatioAdjuster]);
+    var zoom = d3.behavior.zoom().translate([0, 0]).scale(1).scaleExtent([1, 20]).on("zoom", zoomed);
+
+    d3.select(window).on("resize", resize);
+    var svg = d3.select("#viz").append("svg").attr("width", width).attr("height", height),
+        path = d3.geo.path().projection(projection),
+
+        features = svg.append("g");
+    d3.json("HKG_adm.json",  function(t, e) {
+        if (t) return console.error(t);
+        topojson.feature(e, e.objects.HKG_adm1_1);
+        features.selectAll("path")
+            .data(topojson.feature(e, e.objects.HKG_adm1_1).features).enter()
+            .append("path").attr("d", path)
+            .attr("fill", "#e8d8c3")
+            .attr("stroke", "#404040")
+            .attr("stroke-width", .2)
+            .on("mouseover", async function(t) {
+                d3.select("#tooltip").style("top", d3.event.pageY + 20 + "px")
+                    .style("left", d3.event.pageX + 20 + "px")
+                    .select("#region-name-tooltip")
+                    .text(t.properties.NAME_1);
+                var itemID = finditemIDByCode(t.properties.NAME_1);
+                var currentPrice = await priceOf(itemID);
+                var currentPriceFormat = formatPrice(currentPrice);
+                d3.select("#tooltip").select("#region-type-tooltip")
+                    .text(currentPriceFormat + ' ETH');
+
+                // d3.select("#region-name")
+                //     .text(t.properties.NAME_1), d3.select("#region-type")
+                //     .text(t.properties.ENGTYPE_1 + " (" + t.properties.TYPE_1 + ")");
+
+                d3.select("#tooltip").classed("hidden", !1);
+            })
+            .on("mouseout", function() {
+                d3.select("#tooltip").classed("hidden", !0);
+            })
+    });
 }
 
-function buy(itemID)
-{
+function finditemIDByCode(districtName) {
+    var result = 0;
+    hk18districts.forEach(function(element) {
+        if (element["code"] === districtName)
+            result = element["itemID"];
+    });
+    return result;
+}
+
+
+
+function initCards() {
+    var cardsNode = $(".cards");
     var itemTokenContract = web3.eth.contract(itemTokenABI);
     var ItemToken = itemTokenContract.at(contractAddress[currentNet]["itemToken"]);
+    for (var i = 0; i < hk18districts.length; i++) {
+        (function(v) {
+            var itemID = hk18districts[v]['itemID'];
+            ItemToken.allOf(itemID, async function(error, result) {
+                if (!error) {
+                    var ownerAddress = result[0];
+                    var ownerName = "";
+                    await getNickName(ownerAddress)
+                        .then(function(v) { ownerName = v; })
+                        .catch(function(error) {
+                            ownerName = ownerAddress.substr(ownerAddress.length - 6)
+                        });
+                    var nextPrice = result[3];
+                    var nextPriceFormat = formatPrice(nextPrice);
+                    var districtName = hk18districts[v]['code'];
+                    var imageURL = '/static/media/district/' + districtName.split(" ").join('_') + '_District_logo.svg';
+                    var wikiURL = "https://en.wikipedia.org/wiki/" + districtName.split(" ").join('_') + '_District';
+                    var tranactionPending = $('<div class="ui dimmer"><div class="content"><div class="center"><div class="ui text loader">Transaction Pending</div></div></div><!--end content--></div>');
+                    var cardNode = $('<div></div>').appendTo(cardsNode).addClass("ui card dimmable country-card");
+                    cardNode.append(tranactionPending);
+                    var cardContent = $('<div></div>').addClass('content country-card-bg');
+                    var districtImage = $('<img></img>').addClass('ui rounded left floated image')
+                        .attr('src', imageURL).css("height", "40px");
+                    var cardHeader = $('<div></div>').addClass('left aligned header').css("margin-top", "10px")
+                        .html('<a href="' + wikiURL + '" target="_blank">' + districtName + '</a>');
+                    var cardOwner = $('<div></div>').addClass('content country-card-owner')
+                        .css("background-color", "rgb(157, 39, 207)")
+                        .css("color", "rgb(0, 0, 0)");
+                    var owner = $('<span></span>').html("Owner: " + ownerName).css('font-size', '0.9em').css("letter-spacing", "1.5");
+                    cardOwner.append(owner);
+                    var buyButton = $('<div class="ui large left labeled button" role="button" tabindex="0"><a class="ui basic label">' +
+                            nextPriceFormat + '</a><button class="ui primary button" role="button">Buy</button></div>');
+                    buyButton.data("itemID",itemID);
+                    buyButton.data("nextPrice",nextPriceFormat);
+                    buyButton.click(function(){
+                        buy($(this));
+                    });
+                    var extraContent = $('<div></div>').addClass('center aligned content')
+                        .appendTo($('<div></div>').addClass('extra content'))
+                        .append(buyButton);
+                    cardContent.append(districtImage);
+                    cardContent.append(cardHeader);
+                    cardNode.append(cardContent);
+                    cardNode.append(cardOwner);
+                    cardNode.append(extraContent);
+                } else {
+                    console.error(error);
+                }
+            });
+        })(i);
+    }
+    //add button function
 
 }
-function adminOperaion() {
 
-    var itemTokenContract = web3.eth.contract(itemTokenABI);
-    var ItemToken = itemTokenContract.at(contractAddress[currentNet]["itemToken"]);
-    //var number = new BigNumber(1);
-    //var number2 = new BigNumber(1000000000000000);
-    var price = 1000000000000000; // 0.001 ether
-    console.log(web3.fromWei('2105263157894736', 'ether'));
-    var nextPrice = web3.fromWei('2105263157894736', 'ether');
-    console.log(web3.toWei(nextPrice, 'ether'));
-    //test set item function
-    // ItemToken.listMultipleItems([4],1000000000000000,currentAccount,function(error, result){
-    //     if(!error){
-    //         console.log(result);
-    //     } else
-    //     {
-    //         console.error(error);
-    //     }
-    // });
-    // ItemToken.buy(4,{gas:30000,from:currentAccount,value:web3.toWei(nextPrice,'ether')},function(error,result){
-    //     if(!error){
-    //         console.log(result);
-    //     } else
-    //     {
-    //         console.error(error);
-    //     }
-    // })
+function initUI() {
+    //init maps
+    initMap();
+    //init cards
+    initCards();
 }
+
+
+

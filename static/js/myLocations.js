@@ -76,7 +76,7 @@ var hk18districts = [
 	},
 	{
 		"itemID":16,
-		"code":"Shatin",
+		"code":"Sha Tin",
 		"region":"New Territories"
 	},
 	{
