@@ -106,19 +106,24 @@ function buy(data) {
     var nextPriceFormat = data.data('nextPrice');
     var nextPrice = web3.toWei(nextPriceFormat, 'ether');
     var itemID = data.data('itemID');
-
+    var dimmer = $('[data-itemID=' + itemID + ']');
+    dimmer.dimmer('show');
     //Buy Item
-    ItemToken.buy(itemID, {from: currentAccount, value: nextPrice }, function(error, txnHash) {
+    ItemToken.buy(itemID, { from: currentAccount, value: nextPrice }, function(error, txnHash) {
         if (!error) {
             if (txnHash) {
                 web3.eth.getTransactionReceiptMined(txnHash, 500).then(function(receipt) {
-                    alert("Transaction is done");
+                    dimmer.modal('hide');
                     location.reload();
                 });
-            } else
-                alert("Transaciont Fail!!");
-        } else
-            alert("Transaciont Fail!!");
+            } else {
+                //TO-DO  pop up error message
+                alert("Transaction Fail!!");
+            }
+        } else {
+            //TO-DO  pop up error message
+            alert("Transaction Fail!!");
+        }
     })
 }
 
@@ -136,8 +141,7 @@ function priceOf(itemID) {
     })
 }
 
-function formatPrice(price)
-{
+function formatPrice(price) {
 
     doublePrice = parseFloat(web3.fromWei(price, 'ether').toString());
 
@@ -301,7 +305,7 @@ function initMap() {
         path = d3.geo.path().projection(projection),
 
         features = svg.append("g");
-    d3.json("HKG_adm.json",  function(t, e) {
+    d3.json("HKG_adm.json", function(t, e) {
         if (t) return console.error(t);
         topojson.feature(e, e.objects.HKG_adm1_1);
         features.selectAll("path")
@@ -356,9 +360,9 @@ function initCards() {
                     var ownerAddress = result[0];
                     var ownerName = "";
                     await getNickName(ownerAddress)
-                        .then(function(result) { 
-                            if(result.length!=0)
-                                ownerName = result; 
+                        .then(function(result) {
+                            if (result.length != 0)
+                                ownerName = result;
                             else
                                 ownerName = ownerAddress.substr(ownerAddress.length - 6);
                         })
@@ -370,9 +374,10 @@ function initCards() {
                     var districtName = hk18districts[v]['code'];
                     var imageURL = '/static/media/district/' + districtName.split(" ").join('_') + '_District_logo.svg';
                     var wikiURL = "https://en.wikipedia.org/wiki/" + districtName.split(" ").join('_') + '_District';
-                    var tranactionPending = $('<div class="ui dimmer"><div class="content"><div class="center"><div class="ui text loader">Transaction Pending</div></div></div><!--end content--></div>');
+                    var transactionPending = $('<div class="ui dimmer"><div class="content"><div class="center"><div class="ui text loader">Transaction Pending</div></div></div><!--end content--></div>');
+                    transactionPending.attr("data-itemID", itemID);
                     var cardNode = $('<div></div>').appendTo(cardsNode).addClass("ui card dimmable country-card");
-                    cardNode.append(tranactionPending);
+                    cardNode.append(transactionPending);
                     var cardContent = $('<div></div>').addClass('content country-card-bg');
                     var districtImage = $('<img></img>').addClass('ui rounded left floated image')
                         .attr('src', imageURL).css("height", "40px");
@@ -384,10 +389,10 @@ function initCards() {
                     var owner = $('<span></span>').html("Owner: " + ownerName).css('font-size', '0.9em').css("letter-spacing", "1.5");
                     cardOwner.append(owner);
                     var buyButton = $('<div class="ui large left labeled button" role="button" tabindex="0"><a class="ui basic label">' +
-                            nextPriceFormat + '</a><button class="ui primary button" role="button">Buy</button></div>');
-                    buyButton.data("itemID",itemID);
-                    buyButton.data("nextPrice",nextPriceFormat);
-                    buyButton.click(function(){
+                        nextPriceFormat + '</a><button class="ui primary button" role="button">Buy</button></div>');
+                    buyButton.data("itemID", itemID);
+                    buyButton.data("nextPrice", nextPriceFormat);
+                    buyButton.click(function() {
                         buy($(this));
                     });
                     var extraContent = $('<div></div>').addClass('center aligned content')
@@ -414,6 +419,3 @@ function initUI() {
     //init cards
     initCards();
 }
-
-
-

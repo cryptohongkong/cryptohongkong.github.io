@@ -17,7 +17,6 @@
     <script>
     function gtag() { dataLayer.push(arguments) } window.dataLayer = window.dataLayer || [], gtag("js", new Date), gtag("config", "UA-114289118-1")
     </script>
-
 </head>
 
 <body>
@@ -47,19 +46,23 @@
                         <div class="icon"> <img src="/static/media/eth_offline.svg" class="ui image" style="width: 35px; height: 35px;" data-tooltip="Add users to your feed" data-position="bottom left"></div>
                     </div>
                 </div>
-
+                <div class="ui info message">
+                    <div class="content">let us know if you encounter any problems or bugs. <a href="mailto:cryptohongkong101@gmail.com" target="_top">cryptohongkong101@gmail.com</a></div>
+                </div>
                 <div class="marketplace">
                     <div id="viz"></div>
                     <span>
-						<div class="ui basic segment" style="padding: 0px;">
-    						<div class="ui stackable four cards">
-        						
-    						</div>
-						</div>
-    				</span><!--end span-->
-    			</div><!--end marketplace-->
-    		</div>
-    	</div>
+                        <div class="ui basic segment" style="padding: 0px;">
+                            <div class="ui stackable four cards">
+                                
+                            </div>
+                        </div>
+                    </span>
+                    <!--end span-->
+                </div>
+                <!--end marketplace-->
+            </div>
+        </div>
         <div class="ui small modal warning" style="margin-top: -95px;">
             <div class="ui header"><i aria-hidden="true" class="warning sign icon"></i> Error</div>
             <div class="content"></div>
@@ -68,34 +71,32 @@
             </div>
         </div>
         <div class="ui small modal nickname" style="margin-top: -104px;">
-          <div class="ui inverted dimmer">
-              <div class="content">
-                  <div class="center">
-                      <div class="ui text loader">Waiting on Transaction ...</div>
-                  </div>
-              </div>
-          </div>
-          <div class="ui header"><i aria-hidden="true" class="user icon"></i> Set Nickname</div>
-          <div class="content">
-              <div class="ui error fluid input">
-                  <input type="text" value="" placeholder="Nickname">
-              </div>
-          </div>
-          <div class="actions">
-              <button class="ui button cancel" role="button">Cancel</button>
-              <button class="ui primary disabled button" disabled="" role="button" tabindex="-1">Ok</button>
-          </div>
+            <div class="ui inverted dimmer">
+                <div class="content">
+                    <div class="center">
+                        <div class="ui text loader">Waiting on Transaction ...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui header"><i aria-hidden="true" class="user icon"></i> Set Nickname</div>
+            <div class="content">
+                <div class="ui error fluid input">
+                    <input type="text" value="" placeholder="Nickname">
+                </div>
+            </div>
+            <div class="actions">
+                <button class="ui button cancel" role="button">Cancel</button>
+                <button class="ui primary disabled button" disabled="" role="button" tabindex="-1">Ok</button>
+            </div>
         </div>
-
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="/static/js/semantic.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-    <script src="https://d3js.org/topojson.v1.min.js"></script>
-    
-    <script type="text/javascript" src="/static/js/web3.min.js"></script>
-    <script type="text/javascript" src="/static/js/myABI.js"></script>
-    <script type="text/javascript" src="/static/js/myLocations.js"></script>
-    <script type="text/javascript" src="/static/js/main.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script src="/static/js/semantic.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+        <script src="https://d3js.org/topojson.v1.min.js"></script>
+        <script type="text/javascript" src="/static/js/web3.min.js"></script>
+        <script type="text/javascript" src="/static/js/myABI.js"></script>
+        <script type="text/javascript" src="/static/js/myLocations.js"></script>
+        <script type="text/javascript" src="/static/js/main.js"></script>
 </body>
 
 </html>
