@@ -356,9 +356,14 @@ function initCards() {
                     var ownerAddress = result[0];
                     var ownerName = "";
                     await getNickName(ownerAddress)
-                        .then(function(v) { ownerName = v; })
+                        .then(function(result) { 
+                            if(result.length!=0)
+                                ownerName = result; 
+                            else
+                                ownerName = ownerAddress.substr(ownerAddress.length - 6);
+                        })
                         .catch(function(error) {
-                            ownerName = ownerAddress.substr(ownerAddress.length - 6)
+                            ownerName = ownerAddress.substr(ownerAddress.length - 6);
                         });
                     var nextPrice = result[3];
                     var nextPriceFormat = formatPrice(nextPrice);
