@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="manifest.json">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link href='https://fonts.googleapis.com/css?family=Share+Tech' rel='stylesheet' type='text/css'>
+    <link href="/static/css/main.32498749.css" rel="stylesheet">
+    <!-- <link href="./static/css/semantic.min.css" rel="stylesheet"> -->
+    <link href="/static/css/main.css" rel="stylesheet" media="all">
+    <link href="/static/css/tooltip-d3-js-map.css" rel="stylesheet">
+    <title>CryptoHongKong - Hong Kong 18 District Domination on the Ethereum Blockchain</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114289118-1"></script>
+    <script>
+    function gtag() { dataLayer.push(arguments) } window.dataLayer = window.dataLayer || [], gtag("js", new Date), gtag("config", "UA-114289118-1")
+    </script>
+
+</head>
+
+<body>
+    <div id="tooltip" class="hidden">
+        <div><strong>Region:</strong> <span id="region-name-tooltip">100</span></div>
+        <div><strong>Type:</strong> <span id="region-type-tooltip">200</span></div>
+    </div>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+        <div class="content">
+            <div class="ui container app">
+                <div class="ui huge topbar menu">
+                    <a class="item active" aria-current="true" href="/" style="padding-left: 0px;">
+                        <div class="ui"><img src="/static/media/CryptoHongKong.png" class="ui image" style="width: 300px; height: auto;" />
+                        </div>
+                    </a>
+                    <div class="right menu">
+                        <a class="active item" href="/dapp" style="text-transform: uppercase;">Marketplace</a>
+                        <div class="item">
+                            <div class="ui label" style="margin-left: 0px; background-color: rgb(240, 204, 8);"></div>
+                        </div>
+                        <div class="ui custom popup bottom right transition hidden">
+                            <button class="ui button">
+                                Set NickName
+                            </button>
+                        </div>
+                        <div class="icon"> <img src="/static/media/eth_offline.svg" class="ui image" style="width: 35px; height: 35px;" data-tooltip="Add users to your feed" data-position="bottom left"></div>
+                    </div>
+                </div>
+
+                <div class="marketplace">
+                    <div id="viz"></div>
+                    <span>
+						<div class="ui basic segment" style="padding: 0px;">
+    						<div class="ui stackable four cards">
+        						<div class="ui card dimmable country-card">
+            						<div class="ui dimmer">
+                						<div class="content">
+						                    <div class="center">
+						                        <div class="ui text loader">Transaction Pending</div>
+						                    </div>
+                						</div><!--end content-->
+            						</div><!--ui dimmer-->
+            						<div class="content country-card-bg"><img src="/static/media/district/Central_and_Western_District_logo.png" class="ui rounded left floated image" style="height: 40px;">
+                						<div class="left aligned header" style="margin-top: 10px;"><a href="https://en.wikipedia.org/wiki/Islands_District" target="_blank">Central and Western</a></div>
+                						<div class="ui image">
+                							<span class="SVGInline country-card-vector"><!--?xml version="1.0" standalone="no"?--></span>
+                						</div>
+            						</div>
+									<div class="content country-card-owner" style="background-color: rgb(157, 39, 207); color: rgb(0, 0, 0);"><span style="font-size: 0.9em; letter-spacing: 1.5px;">Owner: cryptohongkong</span></div>
+
+
+<!-- <div class="content"><div class="ui two column grid"><div class="column"><div role="list" class="ui list"><div role="listitem" class="item"><div class="header">Capital</div>Tokyo</div><div role="listitem" class="item"><div class="header">Population</div>126960000</div></div></div><div class="column"><div role="list" class="ui list"><div role="listitem" class="item"><div class="header">Language</div>Japanese</div><div role="listitem" class="item"><div class="header">Currency</div>Japanese yen</div></div></div></div></div> -->
+            					
+            						
+            						<div class="extra content">
+                						<div class="center aligned content">
+                    						<div class="ui large left labeled button" role="button" tabindex="0"><a class="ui basic label">0.2 ETH</a>
+                        					<button class="ui primary button" role="button">Buy</button>
+                    						</div>
+                						</div>
+            						</div>
+        						</div>
+    						</div>
+						</div>
+    				</span><!--end span-->
+    			</div><!--end marketplace-->
+    		</div>
+    	</div>
+        <div class="ui small modal warning" style="margin-top: -95px;">
+            <div class="ui header"><i aria-hidden="true" class="warning sign icon"></i> Error</div>
+            <div class="content"></div>
+            <div class="actions">
+                <button class="ui cancel button" role="button">Close</button>
+            </div>
+        </div>
+        <div class="ui small modal nickname" style="margin-top: -104px;">
+          <div class="ui inverted dimmer">
+              <div class="content">
+                  <div class="center">
+                      <div class="ui text loader">Waiting on Transaction ...</div>
+                  </div>
+              </div>
+          </div>
+          <div class="ui header"><i aria-hidden="true" class="user icon"></i> Set Nickname</div>
+          <div class="content">
+              <div class="ui error fluid input">
+                  <input type="text" value="" placeholder="Nickname">
+              </div>
+          </div>
+          <div class="actions">
+              <button class="ui button cancel" role="button">Cancel</button>
+              <button class="ui primary disabled button" disabled="" role="button" tabindex="-1">Ok</button>
+          </div>
+        </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="/static/js/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <!-- D3.js code creates map of Hong Kong. -->
+    <script src="/static/js/map-d3-hong-kong-adm1.js"></script>
+    <script type="text/javascript" src="/static/js/web3.min.js"></script>
+    <script type="text/javascript" src="/static/js/myABI.js"></script>
+    <script type="text/javascript" src="/static/js/myLocations.js"></script>
+    <script type="text/javascript" src="/static/js/main.js"></script>
+</body>
+
+</html>
