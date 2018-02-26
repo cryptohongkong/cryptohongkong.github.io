@@ -20,15 +20,18 @@ $(window).on('load', function() {
     if (typeof web3 !== 'undefined') {
         console.log('Web3 Detected! ' + web3.currentProvider.constructor.name)
         window.web3 = new Web3(web3.currentProvider);
+        window.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined;
+        checkNetwork(window.web3);
     } else {
         //console.log('No Web3 Detected... using HTTP Provider')
-        window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        //window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
         //TO-DO
         //Pop Up Model And Ask User download MetaMask       
-        console.log('No web3? You should consider trying MetaMask!');
+        //console.log('No web3? You should consider trying MetaMask!');
+        warning = '<div class="ui error message"><div class="header">Not Connected</div><div class="content">Cryptohongkong requires a Web3 browser to use like MetaMask or Mist</div></div>';
+        $(warning).insertAfter(".ui.huge.topbar.menu");
     }
-    window.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined;
-    checkNetwork(window.web3);
+    
 
 });
 
@@ -189,7 +192,7 @@ function checkNetwork(web3) {
             default:
                 //local test network
                 currentNet = "testnet";
-                warning = '<div class="ui error message"><div class="header">Not Connected</div><div class="content">Your are using currently on a test network "</div></div>';
+                warning = '<div class="ui error message"><div class="header">Not Connected</div><div class="content">Your are using currently on a test network </div></div>';
                 $(warning).insertAfter(".ui.huge.topbar.menu");
 
         }
