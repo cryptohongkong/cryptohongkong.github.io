@@ -287,7 +287,7 @@ function startApp() {
 
             currentAccount = web3.eth.defaultAccount;
             if (!currentAccount || currentAccount.length === 0) {
-                var warning = '<div class="ui error message appwarning"><div class="header">Not Connected</div><div class="content">Cryptohongkong requires a Web3 browser to use like MetaMask or Mist</div></div>';
+                var warning = '<div class="ui error message appwarning"><div class="header">Not Connected</div><div class="content">Cryptohongkong requires a Web3 browser to use like MetaMask</div></div>';
                 $(warning).insertAfter(".ui.huge.topbar.menu");
 
 
