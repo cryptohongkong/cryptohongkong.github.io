@@ -98,7 +98,7 @@ function buy(data) {
         var dimmer = $('[data-itemID=' + itemID + ']');
         dimmer.dimmer('setting', {
             closable: false,
-            on:false
+            on: false
         });
         dimmer.dimmer('show');
         //Buy Item
@@ -141,6 +141,20 @@ function priceOf(itemID) {
         var itemTokenContract = web3.eth.contract(itemTokenABI);
         var ItemToken = itemTokenContract.at(contractAddress[currentNet]["itemToken"]);
         ItemToken.priceOf(itemID, function(error, result) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
+function ownerOf(itemID) {
+    return new Promise(function(resolve, reject) {
+        var itemTokenContract = web3.eth.contract(itemTokenABI);
+        var ItemToken = itemTokenContract.at(contractAddress[currentNet]["itemToken"]);
+        ItemToken.ownerOf(itemID, function(error, result) {
             if (error) {
                 reject(error);
             } else {
@@ -214,6 +228,8 @@ function getNickNameUI() {
     var ethIconImage = ethIcon.find('.image');
     var nickNameItem = $('.app >.menu>.right>.item');
     var nickNameLabel = $('.app >.menu>.right>.item>.label');
+    var bgColor = "#" + currentAccount.substr(currentAccount.length - 6);
+    nickNameLabel.css('background-color', bgColor);
     getNickName(currentAccount).then(function(result) {
             isOnline = true;
             ethIcon.attr('data-tooltip', 'online').attr('data-position', 'bottom right');
@@ -232,6 +248,7 @@ function getNickNameUI() {
                 nickNameLabel.html(result);
             else
                 nickNameLabel.html(currentAccount.substr(currentAccount.length - 6));
+
         })
         .catch(function(error) {
             isOnline = false;
@@ -249,7 +266,7 @@ function setNickName(nickname) {
     var nickNameModalDimmer = nickNameModal.find('.dimmer');
     nickNameModalDimmer.dimmer('setting', {
         closable: false,
-        on:false,
+        on: false,
     });
     nickNameModalDimmer.dimmer('show');
     var nickNameContract = web3.eth.contract(nickABI);
@@ -319,6 +336,8 @@ function initMap() {
         features.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
     }
 
+     
+
     var margin = {
             top: 10,
             left: 10,
@@ -345,7 +364,21 @@ function initMap() {
         features.selectAll("path")
             .data(topojson.feature(e, e.objects.HKG_adm1_1).features).enter()
             .append("path").attr("d", path)
-            .attr("fill", "#e8d8c3")
+            .attr("fill", "#e8d8c3"
+             // function(t){
+             //    var itemID = finditemIDByCode(t.properties.NAME_1);
+             //    await ownerOf(itemID).then(function(result){
+             //        var ownerAddress = result;
+             //        return "#"+ownerAddress.substr(ownerAddress.length - 6);
+             //    }).catch(function(error){
+             //         return "#e8d8c3";
+             //    })}
+                //      function(t){
+                //     var itemID = finditemIDByCode(t.properties.NAME_1);
+                //     var color =   backgroundOf(itemID);
+                //     return color;
+                // }
+            )
             .attr("stroke", "#404040")
             .attr("stroke-width", .2)
             .on("mouseover", async function(t) {
@@ -392,6 +425,7 @@ function initCards() {
             ItemToken.allOf(itemID, async function(error, result) {
                 if (!error) {
                     var ownerAddress = result[0];
+                    var bgColor = "#" + ownerAddress.substr(ownerAddress.length - 6);
                     var ownerName = "";
                     await getNickName(ownerAddress)
                         .then(function(result) {
@@ -418,7 +452,7 @@ function initCards() {
                     var cardHeader = $('<div></div>').addClass('left aligned header').css("margin-top", "10px")
                         .html('<a href="' + wikiURL + '" target="_blank">' + districtName + '</a>');
                     var cardOwner = $('<div></div>').addClass('content country-card-owner')
-                        .css("background-color", "rgb(157, 39, 207)")
+                        .css("background-color", bgColor)
                         .css("color", "rgb(0, 0, 0)");
                     var owner = $('<span></span>').html("Owner: " + ownerName).css('font-size', '0.9em').css("letter-spacing", "1.5");
                     cardOwner.append(owner);
