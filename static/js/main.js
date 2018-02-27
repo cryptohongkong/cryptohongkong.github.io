@@ -1,20 +1,8 @@
-var currentNet = "ropsten";
+var currentNet = "mainnet";
 var isOnline = false;
+var isWarning = false;
 var currentAccount = "";
-var contractAddress = {
-    "mainnet": {
-        "nicks": "0x1C61D42EFAFe3c627998f2d53D897DBFD99d7fF9",
-        "itemToken": "0x61D89828f79BbaEcf854c7dF08dca887aF0f8eE7"
-    },
-    "testnet": {
-        "nicks": "0x998645774B5aA534A83e39515AbF2C41A0dCdEe0",
-        "itemToken": "0xa0978cb0d2c21517293bb752bf7fa69484eb170c"
-    },
-    "ropsten": {
-        "nicks": "0x4749b95A106CC255C1DD986FbAdC7286D03c99ab",
-        "itemToken": "0x7f2d6e933ab2013d32a68d27c5823dd36685702b"
-    }
-};
+
 
 $(window).on('load', function() {
     if (typeof web3 !== 'undefined') {
@@ -24,14 +12,13 @@ $(window).on('load', function() {
         checkNetwork(window.web3);
     } else {
         //console.log('No Web3 Detected... using HTTP Provider')
-        //window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-        //TO-DO
-        //Pop Up Model And Ask User download MetaMask       
+        window.web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/GlEMBFCzgHACj3nE8XY"));
+        initMap();
         //console.log('No web3? You should consider trying MetaMask!');
-        warning = '<div class="ui error message"><div class="header">Not Connected</div><div class="content">Cryptohongkong requires a Web3 browser to use like MetaMask or Mist</div></div>';
+        var warning = '<div class="ui error message"><div class="header">Not Connected</div><div class="content">Cryptohongkong requires a Web3 browser to use like MetaMask</div></div>';
         $(warning).insertAfter(".ui.huge.topbar.menu");
     }
-    
+
 
 });
 
@@ -61,17 +48,15 @@ var getTransactionReceiptMined = function getTransactionReceiptMined(txHash, int
     }
 };
 
-var nickNameModalInput, ethOnOffLineIcon, nickNameSetButton, nickNameModal, nickNameModalSetButton;
+var nickNameModalInput, ethOnOffLineIcon, nickNameSetButton, nickNameModal, nickNameModalSetButton, txnWarnModal;
 
 
 $(document).ready(function() {
-    // $('.model.warning>.button').click(function() {
-    //     $('.modal.warning').modal('hide').modal('hide dimmer');
-    // });
     nickNameModalInput = $(".modal.nickname>.content>.input>input");
     ethOnOffLineIcon = $('.app >.menu>.right>.icon');
     nickNameSetButton = $('.custom.popup>.ui.button');
     nickNameModal = $('.modal.nickname');
+    txnWarnModal = $('.modal.txnwarnning');
     nickNameModalSetButton = nickNameModal.find('.actions>.primary');
     nickNameModalSetButton.on('click', function() {
         if (nickNameModalInput.val().length != 0)
@@ -104,31 +89,52 @@ function getNickName(address) {
 }
 
 function buy(data) {
-    var itemTokenContract = web3.eth.contract(itemTokenABI);
-    var ItemToken = itemTokenContract.at(contractAddress[currentNet]["itemToken"]);
-    var nextPriceFormat = data.data('nextPrice');
-    var nextPrice = web3.toWei(nextPriceFormat, 'ether');
-    var itemID = data.data('itemID');
-    var dimmer = $('[data-itemID=' + itemID + ']');
-    dimmer.dimmer('show');
-    //Buy Item
-    ItemToken.buy(itemID, { from: currentAccount, value: nextPrice }, function(error, txnHash) {
-        if (!error) {
-            if (txnHash) {
-                web3.eth.getTransactionReceiptMined(txnHash, 500).then(function(receipt) {
+    if (web3.currentProvider.isMetaMask === true && currentAccount && currentAccount.length > 0) {
+        var itemTokenContract = web3.eth.contract(itemTokenABI);
+        var ItemToken = itemTokenContract.at(contractAddress[currentNet]["itemToken"]);
+        var nextPriceFormat = data.data('nextPrice');
+        var nextPrice = web3.toWei(nextPriceFormat, 'ether');
+        var itemID = data.data('itemID');
+        var dimmer = $('[data-itemID=' + itemID + ']');
+        dimmer.dimmer('setting', {
+            closable: false,
+            on:false
+        });
+        dimmer.dimmer('show');
+        //Buy Item
+        ItemToken.buy(itemID, { from: currentAccount, value: nextPrice }, function(error, txnHash) {
+            if (!error) {
+                if (txnHash) {
+                    web3.eth.getTransactionReceiptMined(txnHash, 500).then(function(receipt) {
+                        dimmer.modal('hide');
+                        location.reload();
+                    });
+                } else {
+                    //TO-DO  pop up error message
                     dimmer.modal('hide');
-                    location.reload();
-                });
+                    alert("Transaction Fail!!");
+                }
             } else {
-                //TO-DO  pop up error message
-                alert("Transaction Fail!!");
+                dimmer.modal('hide');
+                txnWarnModal.modal('show');
             }
-        } else {
-            //TO-DO  pop up error message
-            alert("Transaction Fail!!");
-        }
-    })
+        })
+    }
 }
+var contractAddress = {
+    "mainnet": {
+        "nicks": "0x1C61D42EFAFe3c627998f2d53D897DBFD99d7fF9",
+        "itemToken": "0x61D89828f79BbaEcf854c7dF08dca887aF0f8eE7"
+    },
+    "testnet": {
+        "nicks": "0x1C61D42EFAFe3c627998f2d53D897DBFD99d7fF9",
+        "itemToken": "0x61D89828f79BbaEcf854c7dF08dca887aF0f8eE7"
+    },
+    "ropsten": {
+        "nicks": "0x1C61D42EFAFe3c627998f2d53D897DBFD99d7fF9",
+        "itemToken": "0x7f2d6e933ab2013d32a68d27c5823dd36685702b"
+    }
+};
 
 function priceOf(itemID) {
     return new Promise(function(resolve, reject) {
@@ -204,7 +210,7 @@ function checkNetwork(web3) {
 
 
 function getNickNameUI() {
-    var ethIcon = $('.app >.menu>.right>.icon');
+    var ethIcon = $('.app >.menu>.right>.item>.icon');
     var ethIconImage = ethIcon.find('.image');
     var nickNameItem = $('.app >.menu>.right>.item');
     var nickNameLabel = $('.app >.menu>.right>.item>.label');
@@ -213,10 +219,13 @@ function getNickNameUI() {
             ethIcon.attr('data-tooltip', 'online').attr('data-position', 'bottom right');
             ethIconImage.attr('src', '/static/media/eth_online.svg');
             //enable set nickname
-            nickNameItem.popup({
+            nickNameLabel.popup({
                 popup: $('.custom.popup'),
                 position: 'bottom left',
-                on: 'click'
+                delay: {
+                    show: 100,
+                    hide: 1000
+                }
             });
 
             if (result)
@@ -228,7 +237,7 @@ function getNickNameUI() {
             isOnline = false;
             ethIcon.attr('data-tooltip', 'offline').attr('data-position', 'bottom right');
             ethIconImage.attr('src', '/static/media/eth_offline.svg');
-            //console.log(error);
+            nickNameLabel.html("");
         });
 
 }
@@ -237,8 +246,12 @@ function getNickNameUI() {
 
 
 function setNickName(nickname) {
-
-    nickNameModal.find('.dimmer').dimmer('show');
+    var nickNameModalDimmer = nickNameModal.find('.dimmer');
+    nickNameModalDimmer.dimmer('setting', {
+        closable: false,
+        on:false,
+    });
+    nickNameModalDimmer.dimmer('show');
     var nickNameContract = web3.eth.contract(nickABI);
     var nicks = nickNameContract.at(contractAddress[currentNet]["nicks"]);
     //  var nicknameSetEvent = nicks.Set({'_owner':web3.eth.defaultAccount}, {fromBlock: 0, toBlock: 'pending'});
@@ -247,14 +260,22 @@ function setNickName(nickname) {
         if (!error) {
             if (txnHash) {
                 web3.eth.getTransactionReceiptMined(txnHash, 500).then(function(receipt) {
-                    nickNameModal.find('.dimmer').dimmer('show');
-                    getNickNameUI();
-                    nickNameModal.modal('hide');
+                    //nickNameModal.find('.dimmer').dimmer('show');
+                    //getNickNameUI();
+                    //nickNameModal.modal('hide');
+                    location.reload();
                 });
-            } else
-                console.log("txnHash is empty");
-        } else
-            console.log("setNickName Error:" + error);
+            } else {
+                nickNameModalDimmer.dimmer('hide');
+                //nickNameModal.modal('hide');
+                alert("Transaction is null");
+            }
+        } else {
+            nickNameModalDimmer.dimmer('hide');
+            //nickNameModal.modal('hide');
+            txnWarnModal.modal('show');
+            //alert(" Error: MetaMask Tx Signature: User denied transaction signature.");
+        }
     });
 }
 
@@ -263,7 +284,17 @@ function startApp() {
     var refreshAccount = function() {
         if (web3.eth.accounts[0] !== currentAccount) {
             web3.eth.defaultAccount = web3.eth.accounts[0];
+
             currentAccount = web3.eth.defaultAccount;
+            if (!currentAccount || currentAccount.length === 0) {
+                var warning = '<div class="ui error message appwarning"><div class="header">Not Connected</div><div class="content">Cryptohongkong requires a Web3 browser to use like MetaMask or Mist</div></div>';
+                $(warning).insertAfter(".ui.huge.topbar.menu");
+
+
+            } else {
+                $('.ui.error.message.appwarning').remove();
+
+            }
             getNickNameUI();
         }
     };
