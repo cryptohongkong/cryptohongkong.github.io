@@ -478,7 +478,7 @@ function initCards() {
                     var owner = $('<span></span>').html("Owner: " + ownerName).css('font-size', '0.9em').css("letter-spacing", "1.5");
                     cardOwner.append(owner);
                     var buyButton = $('<div class="ui large left labeled button" role="button" tabindex="0"><a class="ui basic label">' +
-                        nextPriceFormat + '</a><button class="ui primary button" role="button">Buy</button></div>');
+                        nextPriceFormat + ' ETH</a><button class="ui primary button" role="button">Buy</button></div>');
                     buyButton.data("itemID", itemID);
                     buyButton.data("nextPrice", nextPriceFormat);
                     buyButton.click(function() {
