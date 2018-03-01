@@ -150,6 +150,20 @@ function priceOf(itemID) {
     })
 }
 
+function allOf(itemID) {
+    return new Promise(function(resolve, reject) {
+        var itemTokenContract = web3.eth.contract(itemTokenABI);
+        var ItemToken = itemTokenContract.at(contractAddress[currentNet]["itemToken"]);
+        ItemToken.allOf(itemID, function(error, result) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
 function ownerOf(itemID) {
     return new Promise(function(resolve, reject) {
         var itemTokenContract = web3.eth.contract(itemTokenABI);
@@ -336,7 +350,7 @@ function initMap() {
         features.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
     }
 
-     
+
 
     var margin = {
             top: 10,
@@ -346,12 +360,12 @@ function initMap() {
         },
         width = parseInt(d3.select("#viz").style("width")),
         width = width - margin.left - margin.right,
-        mapRatio = .5,
+        mapRatio = 0.5,
         height = width * mapRatio,
-        mapRatioAdjuster = 40;
+        mapRatioAdjuster = 50;
     hongKongCenter = [114.15, 22.33];
     var projection = d3.geo.mercator().center(hongKongCenter).translate([width / 2, height / 2]).scale(width * [mapRatio + mapRatioAdjuster]);
-    var zoom = d3.behavior.zoom().translate([0, 0]).scale(1).scaleExtent([1, 20]).on("zoom", zoomed);
+    //var zoom = d3.behavior.zoom().translate([0, 0]).scale(1).scaleExtent([1, 20]).on("zoom", zoomed);
 
     d3.select(window).on("resize", resize);
     var svg = d3.select("#viz").append("svg").attr("width", width).attr("height", height),
@@ -365,14 +379,14 @@ function initMap() {
             .data(topojson.feature(e, e.objects.HKG_adm1_1).features).enter()
             .append("path").attr("d", path)
             .attr("fill", "#e8d8c3"
-             // function(t){
-             //    var itemID = finditemIDByCode(t.properties.NAME_1);
-             //    await ownerOf(itemID).then(function(result){
-             //        var ownerAddress = result;
-             //        return "#"+ownerAddress.substr(ownerAddress.length - 6);
-             //    }).catch(function(error){
-             //         return "#e8d8c3";
-             //    })}
+                // function(t){
+                //    var itemID = finditemIDByCode(t.properties.NAME_1);
+                //    await ownerOf(itemID).then(function(result){
+                //        var ownerAddress = result;
+                //        return "#"+ownerAddress.substr(ownerAddress.length - 6);
+                //    }).catch(function(error){
+                //         return "#e8d8c3";
+                //    })}
                 //      function(t){
                 //     var itemID = finditemIDByCode(t.properties.NAME_1);
                 //     var color =   backgroundOf(itemID);
@@ -387,10 +401,16 @@ function initMap() {
                     .select("#region-name-tooltip")
                     .text(t.properties.NAME_1);
                 var itemID = finditemIDByCode(t.properties.NAME_1);
-                var currentPrice = await priceOf(itemID);
-                var currentPriceFormat = formatPrice(currentPrice);
-                d3.select("#tooltip").select("#region-type-tooltip")
-                    .text(currentPriceFormat + ' ETH');
+                if (itemID) {
+                    var currentPrice = await priceOf(itemID);
+                    var currentPriceFormat = formatPrice(currentPrice);
+                    d3.select("#tooltip").select("#region-price-tooltip")
+                        .text(currentPriceFormat + ' ETH');
+                } else {
+                    d3.select("#tooltip").select("#region-price-tooltip")
+                        .text('LOCK');
+                }
+
 
                 // d3.select("#region-name")
                 //     .text(t.properties.NAME_1), d3.select("#region-type")
@@ -407,7 +427,7 @@ function initMap() {
 function finditemIDByCode(districtName) {
     var result = 0;
     hk18districts.forEach(function(element) {
-        if (element["code"] === districtName)
+        if (element["code"] === districtName && !element["lock"])
             result = element["itemID"];
     });
     return result;
@@ -420,6 +440,7 @@ function initCards() {
     var itemTokenContract = web3.eth.contract(itemTokenABI);
     var ItemToken = itemTokenContract.at(contractAddress[currentNet]["itemToken"]);
     for (var i = 0; i < hk18districts.length; i++) {
+        if (hk18districts[i]['lock']) continue;
         (function(v) {
             var itemID = hk18districts[v]['itemID'];
             ItemToken.allOf(itemID, async function(error, result) {
